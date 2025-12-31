@@ -18,7 +18,7 @@ struct RootView: View {
                     .padding()
             case .signedOut:
                 SignInView()
-            case .signedIn(_):
+            case .signedIn:
                 Text("Signed In")
             }
         }

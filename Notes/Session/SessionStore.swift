@@ -15,12 +15,13 @@ struct User: Equatable {
 enum AuthState: Equatable {
     case loading
     case signedOut(Bool?)
-    case signedIn(User)
+    case signedIn
 }
 
 @MainActor
 final class SessionStore: ObservableObject {
     @Published private(set) var state: AuthState = .loading
+    let keyChain = KeychainTokenStore()
     
     private let tokenStore: TokenStoring
     private let authService: AuthServicing
@@ -43,6 +44,9 @@ final class SessionStore: ObservableObject {
     func signIn(email: String, password: String) async throws {
         let result = try await authService.signIn(email: email, password: password)
 //        tokenStore.saveToken(result.accessToken)
+        if result {
+            state = .signedIn
+        }
 //        state = .signedIn(result.user)
     }
     
@@ -58,5 +62,23 @@ final class SessionStore: ObservableObject {
     func signOut() {
         tokenStore.clearToken()
         state = .signedOut(nil)
+    }
+    
+    func save(accessToken: String, refreshToken: String) {
+        do {
+            try keyChain.saveToken(accessToken, for: .accessToken)
+            try keyChain.saveToken(refreshToken, for: .refreshToken)
+        } catch {
+            print("Keychain save failed:", error)
+        }
+    }
+    
+    func read(token: KeychainTokenKey) {
+        do {
+            let access = try keyChain.readToken(for: token)
+            print("#### the token: \(access)")
+        } catch {
+            print("Keychain read failed:", error)
+        }
     }
 }
