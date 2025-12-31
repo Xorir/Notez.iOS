@@ -55,8 +55,6 @@ final class SessionStore: ObservableObject {
         print("#### isRegisterSuccessful: \(isRegisterSuccessful)")
         // Once register successful, present signin screen again so that they can sign-in.
         state = .signedOut(isRegisterSuccessful)
-//        tokenStore.saveToken(result.accessToken)
-//        state = .signedIn(result.user, /*result*/)
     }
 
     func signOut() {

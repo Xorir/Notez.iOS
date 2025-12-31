@@ -44,10 +44,10 @@ struct AuthService: AuthServicing {
     private let encoder = JSONEncoder()
     
     func register(email: String, password: String) async throws -> Bool {
-        guard let url = URL(string: "https://notez-api-dev-ebbsgvc2fzd5akdq.canadacentral-01.azurewebsites.net/register") else { fatalError("Missing URL") }
+        guard let url = URL(string: NoteEndpoints.register.fullUrl) else { fatalError("Missing URL") }
         
         var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
+        urlRequest.httpMethod = NoteHttpMethods.post.method
         urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         
@@ -72,10 +72,10 @@ struct AuthService: AuthServicing {
     }
     
     func signIn(email: String, password: String) async throws -> Bool {
-        guard let url = URL(string: "https://notez-api-dev-ebbsgvc2fzd5akdq.canadacentral-01.azurewebsites.net/login") else { fatalError("Missing URL") }
+        guard let url = URL(string: NoteEndpoints.login.fullUrl) else { fatalError("Missing URL") }
         
         var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
+        urlRequest.httpMethod = NoteHttpMethods.post.method
         urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         
