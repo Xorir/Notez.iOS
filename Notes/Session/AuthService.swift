@@ -61,7 +61,7 @@ struct AuthService: AuthServicing {
         do {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                print("#### isRegistered data: \(data)")
+                Logger.shared.debug("register() data \(data)")
                 return false
             }
             return true
@@ -89,12 +89,12 @@ struct AuthService: AuthServicing {
         do {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                print("#### isRegistered data: \(data)")
+                Logger.shared.debug("signIn() data \(data)")
                 return false
             }
             
             let decodedResponse = try JSONDecoder().decode(LoginModel.self, from: data)
-            print("#### decodedResponse: \(decodedResponse)")
+            Logger.shared.debug("signIn() decodedResponse \(decodedResponse)")
             return true
         }
         catch {
