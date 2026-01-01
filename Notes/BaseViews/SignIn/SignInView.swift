@@ -20,6 +20,10 @@ struct SignInView: View {
 
     var body: some View {
         VStack(spacing: 12) {
+            Text("The Notez")
+                .font(.largeTitle)
+                .padding()
+            
             TextField("Email", text: $vm.email)
                 .keyboardType(.emailAddress)
                 .textInputAutocapitalization(.never)
@@ -47,15 +51,32 @@ struct SignInView: View {
             if let msg = vm.errorMessage {
                 Text(msg).font(.footnote).foregroundStyle(.red)
             }
-
-            VStack {
-                Picker("SignInType", selection: $vm.selectedSignInType) {
-                    ForEach(SignInType.allCases) { type in
-                        Text(type.rawValue.capitalized)
+            
+            HStack {
+                Button {
+                    Logger.shared.debug("Signin button tapped")
+                    Task {
+                        await vm.submitSignIn(using: session)
                     }
+                } label: {
+                    Text("Sign-In")
+                        .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.bordered)
+                .foregroundStyle(.white)
+                .background(Color.purple)
+                .cornerRadius(10)
             }
-            .pickerStyle(.segmented)
+            
+            HStack {
+                Spacer()
+                Button {
+                    Logger.shared.debug("Sign up button tapped")
+                } label: {
+                    Text("Sign Up")
+                }
+                .foregroundStyle(.cyan)
+            }
 
             Spacer()
         }

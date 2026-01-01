@@ -32,28 +32,51 @@ final class SessionStore: ObservableObject {
         self.authService = authService
     }
     
+    // MARK: - Session fucntions
     func restoreSession() async {
-        guard let token = tokenStore.readToken() else {
-            state = .signedOut(nil)
-            return
-        }
         
-        Logger.shared.debug("restoreSession() - token: \(token)")
+        do {
+            // Check if accessToken exists in keychain.
+            // If exists, probably expired, and make refresh token call to update them.
+            guard let token = try read(token: .accessToken) else {
+                Logger.shared.debug("restoreSession() - accessToken does not exist")
+                state = .signedOut(nil)
+                return
+            }
+        } catch {
+            Logger.shared.debug("restoreSession() - token: \(error)")
+        }
+
+        do {
+            if let refreshToken = try read(token: .refreshToken) {
+                try await refresh(token: refreshToken)
+            }
+        } catch {
+            Logger.shared.debug("restoreSession() - Keychain refreshToken read failed: \(error)")
+        }
     }
     
     func signIn(email: String, password: String) async throws {
         let result = try await authService.signIn(email: email, password: password)
-//        tokenStore.saveToken(result.accessToken)
-        if result {
+        if let accessToken = result?.accessToken, let refreshToken = result?.refreshToken {
+            save(accessToken: accessToken, refreshToken: refreshToken)
             state = .signedIn
         }
     }
     
     func register(email: String, password: String) async throws {
         let isRegisterSuccessful = try await authService.register(email: email, password: password)
-        Logger.shared.debug("register() - isRegisterSuccessful: \(isRegisterSuccessful)")
         // Once register successful, present signin screen again so that they can sign-in.
         state = .signedOut(isRegisterSuccessful)
+    }
+    
+    func refresh(token: String) async throws {
+        if let loginModel = try await authService.refresh(token: token) {
+            if let accessToken = loginModel.accessToken, let refreshToken = loginModel.refreshToken {
+                save(accessToken: accessToken, refreshToken: refreshToken)
+                state = .signedIn
+            }
+        }
     }
 
     func signOut() {
@@ -61,6 +84,7 @@ final class SessionStore: ObservableObject {
         state = .signedOut(nil)
     }
     
+    // MARK: - Keychain functions
     func save(accessToken: String, refreshToken: String) {
         do {
             try keyChain.saveToken(accessToken, for: .accessToken)
@@ -70,12 +94,23 @@ final class SessionStore: ObservableObject {
         }
     }
     
-    func read(token: KeychainTokenKey) {
+    func read(token: KeychainTokenKey) throws -> String? {
         do {
             let access = try keyChain.readToken(for: token)
-            Logger.shared.debug("read() - access: \(access)")
+            Logger.shared.debug("read() - access: \(String(describing: access))")
+            return access
         } catch {
             print("Keychain read failed:", error)
+        }
+        return nil
+    }
+    
+    func clear(token: KeychainTokenKey) {
+        do {
+            try keyChain.deleteToken(for: token)
+            Logger.shared.debug("clear() - access: \(String(describing: access))")
+        } catch {
+            Logger.shared.debug("clear() - Keychain read failed: \(error)")
         }
     }
 }
