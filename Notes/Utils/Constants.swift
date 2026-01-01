@@ -37,6 +37,7 @@ enum NoteHttpMethods: String, CaseIterable {
 enum NoteEndpoints: String, CaseIterable {
     case register
     case login
+    case refresh
     case allNotes
     
     var fullUrl: String {
@@ -45,6 +46,8 @@ enum NoteEndpoints: String, CaseIterable {
             return Constants.URLs.base + "/register"
         case .login:
             return Constants.URLs.base + "/login"
+        case .refresh:
+            return Constants.URLs.base + "/refresh"
         case .allNotes:
             return Constants.URLs.base + "/api/notez"
         }
