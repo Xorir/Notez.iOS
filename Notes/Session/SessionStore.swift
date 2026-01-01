@@ -38,7 +38,7 @@ final class SessionStore: ObservableObject {
             return
         }
         
-        print("#### the token: \(token)")
+        Logger.shared.debug("restoreSession() - token: \(token)")
     }
     
     func signIn(email: String, password: String) async throws {
@@ -47,12 +47,11 @@ final class SessionStore: ObservableObject {
         if result {
             state = .signedIn
         }
-//        state = .signedIn(result.user)
     }
     
     func register(email: String, password: String) async throws {
         let isRegisterSuccessful = try await authService.register(email: email, password: password)
-        print("#### isRegisterSuccessful: \(isRegisterSuccessful)")
+        Logger.shared.debug("register() - isRegisterSuccessful: \(isRegisterSuccessful)")
         // Once register successful, present signin screen again so that they can sign-in.
         state = .signedOut(isRegisterSuccessful)
     }
@@ -74,7 +73,7 @@ final class SessionStore: ObservableObject {
     func read(token: KeychainTokenKey) {
         do {
             let access = try keyChain.readToken(for: token)
-            print("#### the token: \(access)")
+            Logger.shared.debug("read() - access: \(access)")
         } catch {
             print("Keychain read failed:", error)
         }
