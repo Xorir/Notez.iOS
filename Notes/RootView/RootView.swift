@@ -19,7 +19,7 @@ struct RootView: View {
             case .signedOut:
                 SignInView()
             case .signedIn:
-                Text("Signed In")
+                MainTabView()
             }
         }
         .animation(.default, value: session.state)
