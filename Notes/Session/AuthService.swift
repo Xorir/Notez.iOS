@@ -47,6 +47,7 @@ protocol AuthServicing {
 struct AuthService: AuthServicing {
     private let encoder = JSONEncoder()
     
+    // MARK: - Register
     func register(email: String, password: String) async throws -> Bool {
         guard let url = URL(string: NoteEndpoints.register.fullUrl) else { fatalError("Missing URL") }
         
@@ -77,6 +78,7 @@ struct AuthService: AuthServicing {
         }
     }
     
+    // MARK: - Signin
     func signIn(email: String, password: String) async throws -> LoginModel? {
         guard let url = URL(string: NoteEndpoints.login.fullUrl) else { fatalError("Missing URL") }
         
@@ -111,6 +113,7 @@ struct AuthService: AuthServicing {
         }
     }
     
+    // MARK: - Refresh
     func refresh(token: String) async throws -> LoginModel? {
         guard let url = URL(string: NoteEndpoints.refresh.fullUrl) else { fatalError("Missing URL") }
         
