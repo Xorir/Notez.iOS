@@ -39,6 +39,7 @@ enum NoteEndpoints: String, CaseIterable {
     case login
     case refresh
     case allNotes
+    case createNote
     
     var fullUrl: String {
         switch self {
@@ -49,6 +50,8 @@ enum NoteEndpoints: String, CaseIterable {
         case .refresh:
             return Constants.URLs.base + "/refresh"
         case .allNotes:
+            return Constants.URLs.base + "/api/notez"
+        case .createNote:
             return Constants.URLs.base + "/api/notez"
         }
     }
