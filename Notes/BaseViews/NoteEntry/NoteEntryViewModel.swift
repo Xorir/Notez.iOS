@@ -10,7 +10,8 @@ import Foundation
 @MainActor
 final class NoteEntryViewModel: ObservableObject {
     let networkManager = NetworkManager()
-    @Published var isNoteCreated: Bool = false
+    @Published var isNoteCreated: Bool?
+    @Published var alert: AlertItem?
     
     func createNote(title: String, content: String, session: SessionStore) async {
         guard let accessToken = getToken(session: session) else { return }
@@ -21,7 +22,7 @@ final class NoteEntryViewModel: ObservableObject {
             self.isNoteCreated = isNoteCreated
         } catch {
             self.isNoteCreated = false
-        }        
+        }
     }
     
     func getNoteData(title: String, content: String) -> CreateNoteModel {
@@ -49,5 +50,10 @@ final class NoteEntryViewModel: ObservableObject {
         }
     }
     
-    
+    func presentAlertForRegistration(status: Bool) {
+        let title = status ? "Success" : "Failure"
+        let message = status ? "Note created successfully!" : "Something went wrong, try again!"
+        
+        self.alert = AlertItem(title: title, message: message)
+    }
 }
