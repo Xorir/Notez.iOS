@@ -5,7 +5,7 @@
 //  Created by Erman Maris on 1/2/26.
 //
 
-struct NotesModel: Identifiable, Decodable {
+struct NotesModel: Identifiable, Codable {
     let id: Int?
     let title: String?
     let content: String?
@@ -13,6 +13,6 @@ struct NotesModel: Identifiable, Decodable {
     let deletedAt: String?
     let isPinned: Bool?
     let name: String?
-    let description: Bool?
+    let description: String?
     var tags: [String]? = []
 }

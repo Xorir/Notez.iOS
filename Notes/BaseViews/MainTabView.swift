@@ -8,28 +8,34 @@
 import SwiftUI
 
 enum Tab {
-    case home, notes, settings
+    case home, notes, settings, noteEntry
 }
 
 
 struct MainTabView: View {
     @EnvironmentObject private var session: SessionStore
-    @State private var selectedTab: Tab = .home
-
+    @State private var selectedTab: Tab = .noteEntry
+    
     var body: some View {
         TabView(selection: $selectedTab) {
-            HomeView()
+            NoteEntryView()
                 .tabItem {
-                    Label("Home", systemImage: "house")
+                    Label("Note Entry", systemImage: "note.text")
                 }
-                .tag(Tab.home)
-
+                .tag(Tab.noteEntry)
+            
             NotesView()
                 .tabItem {
                     Label("Notes", systemImage: "note.text")
                 }
                 .tag(Tab.notes)
-
+            
+            HomeView()
+                .tabItem {
+                    Label("Home", systemImage: "house")
+                }
+                .tag(Tab.home)
+            
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape")
