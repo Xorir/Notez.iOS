@@ -51,5 +51,17 @@ struct NoteEntryView: View {
                 }
             }
         }
+        .onReceive(viewModel.$isNoteCreated, perform: { isCreated in
+            if let created = isCreated {
+                viewModel.presentAlertForRegistration(status: created)
+            }
+        })
+        .alert(item: $viewModel.alert) { alert in
+            Alert(
+                title: Text(alert.title),
+                message: Text(alert.message),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
 }
