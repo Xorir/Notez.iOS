@@ -69,4 +69,29 @@ class NetworkManager {
         }
     }
     
+    func delete(noteId: Int, token: String) async throws -> Bool {
+        guard let url = URL(string: NoteEndpoints.createNote.fullUrl + "/\(noteId)") else { fatalError("Missing URL") }
+        
+        Logger.shared.debug("delete() URL: \(url)")
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = NoteHttpMethods.delete.method
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+        urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        do {
+            Logger.shared.debug(loggerReqType: .request)
+            let (data, response) = try await URLSession.shared.data(for: urlRequest)
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 204 else {
+                Logger.shared.debug("delete() data \(data)")
+                return false
+            }
+            Logger.shared.debug(loggerReqType: .response)
+            return true
+        }
+        catch {
+            return false
+        }
+    }
+    
 }
