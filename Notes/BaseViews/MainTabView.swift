@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum Tab {
-    case home, notes, settings, noteEntry
+    case notes, settings, noteEntry
 }
 
 
@@ -20,21 +20,15 @@ struct MainTabView: View {
         TabView(selection: $selectedTab) {
             NoteEntryView()
                 .tabItem {
-                    Label("Note Entry", systemImage: "note.text")
+                    Label("Note Entry", systemImage: "bubble.and.pencil")
                 }
                 .tag(Tab.noteEntry)
             
-            NotesView()
+            NotesView(viewModel: NotesViewModel(sessionStore: session))
                 .tabItem {
                     Label("Notes", systemImage: "note.text")
                 }
                 .tag(Tab.notes)
-            
-            HomeView()
-                .tabItem {
-                    Label("Home", systemImage: "house")
-                }
-                .tag(Tab.home)
             
             SettingsView()
                 .tabItem {
