@@ -13,11 +13,15 @@ struct NotesView: View {
 
     var body: some View {
         NavigationStack {
-            Text("Notes Screen")
+            Text("-")
                 .navigationTitle("Notes")
             List {
                 ForEach(viewModel.notes) { note in
-                    Text(note.title ?? "")
+                    NavigationLink {
+                        NoteDetailView(note: note)
+                    } label: {
+                        Text(note.title ?? "")
+                    }
                 }
                 .onDelete(perform: { offsets in
                     Task {
@@ -26,8 +30,26 @@ struct NotesView: View {
                 })
             }
         }
+        .navigationDestination(for: NotesModel.self) { theNote in
+            NoteDetailView(note: theNote)
+        }
         .task {
             await viewModel.getAllNotes(session: session)
         }
+    }
+}
+
+struct NoteDetailView: View {
+    let note: NotesModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(note.title ?? "").font(.title2).bold()
+            Text(note.content ?? "")
+            Spacer()
+        }
+        .padding()
+        .navigationTitle("Detail")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

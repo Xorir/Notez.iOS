@@ -15,11 +15,7 @@ class NetworkManager {
         guard let url = URL(string: NoteEndpoints.allNotes.fullUrl) else { fatalError("Missing URL") }
         
         Logger.shared.debug("getAllNotes() URL: \(url)")
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = NoteHttpMethods.get.method
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        let urlRequest = getURLRequest(url: url, token: token, httpMethod: .get)
         
         do {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
@@ -40,11 +36,7 @@ class NetworkManager {
         guard let url = URL(string: NoteEndpoints.createNote.fullUrl) else { fatalError("Missing URL") }
         
         Logger.shared.debug("createNote() URL: \(url)")
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = NoteHttpMethods.post.method
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
-        urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        var urlRequest = getURLRequest(url: url, token: token, httpMethod: .post)
 
         let noteModel = note
         
@@ -73,11 +65,7 @@ class NetworkManager {
         guard let url = URL(string: NoteEndpoints.createNote.fullUrl + "/\(noteId)") else { fatalError("Missing URL") }
         
         Logger.shared.debug("delete() URL: \(url)")
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = NoteHttpMethods.delete.method
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
-        urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        let urlRequest = getURLRequest(url: url, token: token, httpMethod: .delete)
 
         do {
             Logger.shared.debug(loggerReqType: .request)
@@ -92,6 +80,15 @@ class NetworkManager {
         catch {
             return false
         }
+    }
+    
+    private func getURLRequest(url: URL, token: String, httpMethod: NoteHttpMethods) -> URLRequest {
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = httpMethod.method
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        return urlRequest
     }
     
 }

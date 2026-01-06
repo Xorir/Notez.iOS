@@ -38,7 +38,6 @@ struct NoteEntryView: View {
                         bodyText = ""
                     }
                 }
-
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         onSave?(title.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -60,7 +59,10 @@ struct NoteEntryView: View {
             Alert(
                 title: Text(alert.title),
                 message: Text(alert.message),
-                dismissButton: .default(Text("OK"))
+                dismissButton: .default(Text("OK"), action: {
+                    title = ""
+                    bodyText = ""
+                })
             )
         }
     }
