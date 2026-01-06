@@ -5,7 +5,7 @@
 //  Created by Erman Maris on 1/2/26.
 //
 
-struct NotesModel: Identifiable, Codable {
+struct NotesModel: Identifiable, Codable, Hashable {
     let id: Int?
     let title: String?
     let content: String?

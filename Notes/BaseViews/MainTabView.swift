@@ -23,13 +23,11 @@ struct MainTabView: View {
                     Label("Note Entry", systemImage: "bubble.and.pencil")
                 }
                 .tag(Tab.noteEntry)
-            
             NotesView(viewModel: NotesViewModel(sessionStore: session))
                 .tabItem {
                     Label("Notes", systemImage: "note.text")
                 }
                 .tag(Tab.notes)
-            
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape")
