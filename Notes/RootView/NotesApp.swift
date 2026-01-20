@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct NotesApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var session = SessionStore()
     
     var body: some Scene {
