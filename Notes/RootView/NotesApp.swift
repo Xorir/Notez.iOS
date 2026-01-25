@@ -18,6 +18,16 @@ struct NotesApp: App {
                 .environmentObject(session)
                 .task {
                     await session.restoreSession()
+                    
+                    // FaceId code:
+                    //                    do {
+                    //                        let ok = try await BiometricAuth().authenticate(
+                    //                            reason: "Unlock access to your account"
+                    //                        )
+                    //                        await session.restoreSession()
+                    //                    } catch {
+                    //                        Logger.shared.debug("FaceID error: \((error as NSError).localizedDescription)")
+                    //                    }
                 }
         }
     }
