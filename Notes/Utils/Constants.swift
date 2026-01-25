@@ -18,6 +18,7 @@ enum NoteHttpMethods: String, CaseIterable {
     case get
     case delete
     case update
+    case patch
     
     var method: String {
         switch self {
@@ -29,6 +30,8 @@ enum NoteHttpMethods: String, CaseIterable {
             return "GET"
         case .update:
             return "UPDATE"
+        case .patch:
+            return "PATCH"
         }
     }
 }
@@ -40,6 +43,7 @@ enum NoteEndpoints: String, CaseIterable {
     case refresh
     case allNotes
     case createNote
+    case identityUser
     
     var fullUrl: String {
         switch self {
@@ -53,6 +57,8 @@ enum NoteEndpoints: String, CaseIterable {
             return Constants.URLs.base + "/api/notez"
         case .createNote:
             return Constants.URLs.base + "/api/notez"
+        case .identityUser:
+            return Constants.URLs.base + "/api/identity/user"
         }
     }
 }

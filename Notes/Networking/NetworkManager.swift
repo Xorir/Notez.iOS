@@ -91,4 +91,32 @@ class NetworkManager {
         return urlRequest
     }
     
+    func update(deviceToken: String, token: String) async throws -> Bool {
+        guard let url = URL(string: NoteEndpoints.identityUser.fullUrl) else { fatalError("Missing URL") }
+        
+        Logger.shared.debug("update(deviceToken) URL: \(url)")
+        var urlRequest = getURLRequest(url: url, token: token, httpMethod: .patch)
+        let userDetail = UpdateUserDetailModel(deviceToken: deviceToken)
+
+        do {
+            urlRequest.httpBody = try encoder.encode(userDetail)
+        } catch {
+            throw NetworkError.encodingFailed
+        }
+        
+        do {
+            Logger.shared.debug(loggerReqType: .request)
+            let (data, response) = try await URLSession.shared.data(for: urlRequest)
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 204 else {
+                Logger.shared.debug("createNote() data \(data)")
+                return false
+            }
+            Logger.shared.debug(loggerReqType: .response)
+            return true
+        }
+        catch {
+            return false
+        }
+    }
+    
 }

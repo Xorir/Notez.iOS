@@ -19,8 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
 
         let tokenString = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
-        print("APNs device token:", tokenString)
-
+        Logger.shared.debug("APNs device token: \(tokenString)")
+        UserSession.shared.apnsToken = tokenString
         // Send tokenString to your backend and associate with the logged-in user
         // BackendAPI.savePushToken(tokenString)
     }
