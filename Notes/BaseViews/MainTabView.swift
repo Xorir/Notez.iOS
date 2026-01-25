@@ -47,10 +47,19 @@ struct HomeView: View {
 }
 
 struct SettingsView: View {
+    @EnvironmentObject private var session: SessionStore
+
     var body: some View {
         NavigationStack {
             Text("Settings Screen")
                 .navigationTitle("Settings")
+                .toolbar {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") {
+                            session.signOut()
+                        }
+                    }
+                }
         }
     }
 }

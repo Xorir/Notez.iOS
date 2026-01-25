@@ -60,6 +60,9 @@ final class SessionStore: ObservableObject {
         let result = try await authService.signIn(email: email, password: password)
         if let accessToken = result?.accessToken, let refreshToken = result?.refreshToken {
             save(accessToken: accessToken, refreshToken: refreshToken)
+            UserSession.shared.email = email
+            UserSession.shared.userId = email
+            UserSession.shared.authToken = accessToken
             state = .signedIn
         }
     }
@@ -80,7 +83,9 @@ final class SessionStore: ObservableObject {
     }
 
     func signOut() {
-        tokenStore.clearToken()
+        #warning("Implement /logout endpoint")
+        clear(token: .accessToken)
+        clear(token: .refreshToken)
         state = .signedOut(nil)
     }
     

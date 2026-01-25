@@ -25,6 +25,17 @@ final class NoteEntryViewModel: ObservableObject {
         }
     }
     
+    func update(session: SessionStore) async {
+        guard let accessToken = getToken(session: session), let apnsToken = UserSession.shared.apnsToken else { return }
+        
+        do {
+            let isUserUpdated = try await networkManager.update(deviceToken: apnsToken, token: accessToken)
+            Logger.shared.debug("update(session:) Updated")
+        } catch {
+            Logger.shared.debug("update(session:) failed")
+        }
+    }
+    
     func getNoteData(title: String, content: String) -> CreateNoteModel {
         let note = CreateNoteModel(title: title,
                                    content: content,

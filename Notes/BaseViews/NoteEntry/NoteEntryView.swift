@@ -50,6 +50,10 @@ struct NoteEntryView: View {
                 }
             }
         }
+        .task {
+//            PushNotificationManager.shared.requestAuthorization()
+            await viewModel.update(session: session)
+        }
         .onReceive(viewModel.$isNoteCreated, perform: { isCreated in
             if let created = isCreated {
                 viewModel.presentAlertForRegistration(status: created)
